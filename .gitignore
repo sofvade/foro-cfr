@@ -6,3 +6,4 @@ prisma/dev.db
 *.save
 *.bak
 *.clean
+*.backup*
