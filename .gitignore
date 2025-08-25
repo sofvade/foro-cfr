@@ -5,3 +5,4 @@ prisma/dev.db
 .DS_Store
 *.save
 *.bak
+*.clean
