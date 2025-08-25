@@ -7,3 +7,4 @@ prisma/dev.db
 *.bak
 *.clean
 *.backup*
+app/**/*.bak*
