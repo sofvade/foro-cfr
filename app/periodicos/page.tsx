@@ -29,7 +29,7 @@ const REGIONALES: Paper[] = [
   { name: "El Comercio", url: "https://www.elcomercio.es", region: "Asturias" },
 ];
 
-// Componente auxiliar SIN export
+// Componente auxiliar SIN export (¡importante! no uses "export" aquí)
 function Grid({ items }: { items: Paper[] }) {
   return (
     <ul className="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -74,3 +74,4 @@ export default function Page() {
     </main>
   );
 }
+
