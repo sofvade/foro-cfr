@@ -1,6 +1,7 @@
 'use client';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
+
 type Category = { id: string; name: string; slug: string };
 
 export default function ForumFiltersClient({
