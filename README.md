@@ -47,3 +47,4 @@ Usuario sembrado (seed): `sofia@example.com` / `demo1234`
 - Reacciones (likes), etiquetas por tema y búsqueda.
 - Editor enriquecido (MDX) y subida de imágenes (UploadThing).
 - Internacionalización (ES/EN) y feeds por universidad.
+# CIBF
