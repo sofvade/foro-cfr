@@ -152,10 +152,7 @@ export default function PeriodicosPage() {
         <Grid items={REGIONALES} />
       </section>
     </main>
-  );
+);
 }
-git add app/periodicos/page.tsx
-git commit -m "feat: página Periódicos de España"
-git push
 
 
