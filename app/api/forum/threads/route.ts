@@ -1,16 +1,42 @@
 import { prisma } from '@/lib/prisma';
+import { getServerSession } from 'next-auth';
+import { authOptions } from '@/lib/auth';
+import { NextResponse } from 'next/server';
 
 export async function POST(req: Request) {
-  const { title, content, slug } = await req.json();
-  if (!title || !content) return new Response(JSON.stringify({ error: 'Faltan campos' }), { status: 400 });
-  const author = await prisma.user.findFirst(); // simplificado: el primer usuario será autor si no hay sesión
+  const { title, content, slug, categoryId } = await req.json();
+  if (!title || !content) {
+    return NextResponse.json({ error: 'Faltan campos' }, { status: 400 });
+  }
+
+  const session = await getServerSession(authOptions);
+  if (!session?.user?.email) {
+    return NextResponse.json({ error: 'No autorizado' }, { status: 401 });
+  }
+
+  const user = await prisma.user.findUnique({ where: { email: session.user.email } });
+  if (!user) return NextResponse.json({ error: 'Usuario no encontrado' }, { status: 401 });
+
+  // valida categoría si viene
+  let catId: string | undefined = undefined;
+  if (categoryId) {
+    const cat = await prisma.category.findUnique({ where: { id: categoryId } });
+    if (cat) catId = cat.id;
+  }
+
   const t = await prisma.thread.create({
-    data: { title, content, slug: slug || title.toLowerCase().replace(/\s+/g, '-') , authorId: author?.id! }
+    data: {
+      title,
+      content,
+      slug: slug || title.toLowerCase().replace(/\s+/g, '-'),
+      authorId: user.id,
+      categoryId: catId,
+    },
   });
-  return new Response(JSON.stringify({ id: t.id }), { status: 201 });
+  return NextResponse.json({ id: t.id }, { status: 201 });
 }
 
 export async function GET() {
-  const threads = await prisma.thread.findMany({ orderBy: { createdAt: 'desc' }});
-  return new Response(JSON.stringify(threads));
+  const threads = await prisma.thread.findMany({ orderBy: { createdAt: 'desc' } });
+  return NextResponse.json(threads);
 }

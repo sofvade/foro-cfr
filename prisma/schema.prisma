@@ -8,28 +8,43 @@ generator client {
 }
 
 model User {
-  id           String   @id @default(cuid())
+  id           String     @id @default(cuid())
   name         String?
-  email        String   @unique
+  email        String     @unique
   passwordHash String
   image        String?
-  role         String   @default("user")
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
+  role         String     @default("user")
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
   threads      Thread[]
   comments     Comment[]
+  reactions    Reaction[]
+}
+
+model Category {
+  id        String   @id @default(cuid())
+  name      String
+  slug      String   @unique
+  createdAt DateTime @default(now())
+  threads   Thread[]
 }
 
 model Thread {
-  id        String    @id @default(cuid())
-  title     String
-  slug      String    @unique
-  content   String
-  authorId  String
-  author    User      @relation(fields: [authorId], references: [id])
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
-  comments  Comment[]
+  id         String      @id @default(cuid())
+  title      String
+  slug       String      @unique
+  content    String
+  authorId   String
+  author     User        @relation(fields: [authorId], references: [id])
+  categoryId String?
+  category   Category?   @relation(fields: [categoryId], references: [id])
+  createdAt  DateTime    @default(now())
+  updatedAt  DateTime    @updatedAt
+  comments   Comment[]
+  reactions  Reaction[]
+
+  @@index([createdAt])
+  @@index([categoryId])
 }
 
 model Comment {
@@ -41,4 +56,19 @@ model Comment {
   author    User     @relation(fields: [authorId], references: [id])
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  @@index([threadId, createdAt])
+}
+
+model Reaction {
+  id        String   @id @default(cuid())
+  userId    String
+  threadId  String
+  createdAt DateTime @default(now())
+
+  user      User   @relation(fields: [userId], references: [id])
+  thread    Thread @relation(fields: [threadId], references: [id])
+
+  @@unique([userId, threadId])
+  @@index([threadId])
 }
