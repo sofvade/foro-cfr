@@ -1,3 +1,8 @@
+import Link from "next/link";
+
+<Link href="/periodicos" className="hover:underline">
+  Periódicos
+</Link>
 import './globals.css'
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
