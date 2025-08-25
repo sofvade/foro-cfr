@@ -25,6 +25,7 @@
     "zod": "^3.23.8"
   },
   "devDependencies": {
+    "@types/bcryptjs": "^2.4.6",
     "@types/node": "24.3.0",
     "@types/react": "19.1.11",
     "postcss": "^8.4.39",
