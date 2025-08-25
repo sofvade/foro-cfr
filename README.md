@@ -48,3 +48,4 @@ Usuario sembrado (seed): `sofia@example.com` / `demo1234`
 - Editor enriquecido (MDX) y subida de imágenes (UploadThing).
 - Internacionalización (ES/EN) y feeds por universidad.
 # CIBF
+# foro-cfr
