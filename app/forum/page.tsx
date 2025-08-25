@@ -1,6 +1,3 @@
--+1-cd ~/Downloads/campus-foro-cfr
-: > app/forum/page.tsx        # deja el archivo vacío
-nano app/forum/page.tsx       # ábrelo para pegar el contenido limpio
 import Link from 'next/link';
 import { prisma } from '@/lib/prisma';
 import ForumFiltersClient from '@/components/ForumFiltersClient';
@@ -70,7 +67,3 @@ export default async function ForumPage({
     </section>
   );
 }
-import Link from 'next/link';
-import { prisma } from '@/lib/prisma';
-import ForumFiltersClient from '@/components/ForumFiltersClient';
-
