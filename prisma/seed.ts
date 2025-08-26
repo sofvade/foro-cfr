@@ -58,3 +58,47 @@ async function main() {
 }
 
 main().catch((e) => (console.error(e), process.exit(1))).finally(() => prisma.$disconnect());
+
+import { PrismaClient } from "@prisma/client";
+const prisma = new PrismaClient();
+
+async function main() {
+  const europea = await prisma.university.create({
+    data: {
+      name: "Universidad Europea",
+      country: "España",
+      city: "Madrid",
+      website: "https://universidadeuropea.com",
+      rankings: {
+        create: [
+          { year: 2025, position: 120, source: "QS" },
+          { year: 2024, position: 115, source: "THE" },
+        ],
+      },
+    },
+  });
+
+  const complu = await prisma.university.create({
+    data: {
+      name: "Universidad Complutense de Madrid",
+      country: "España",
+      city: "Madrid",
+      website: "https://www.ucm.es",
+      rankings: {
+        create: [{ year: 2025, position: 200, source: "QS" }],
+      },
+    },
+  });
+
+  console.log({ europea, complu });
+}
+
+main()
+  .catch((e) => {
+    console.error(e);
+    process.exit(1);
+  })
+  .finally(async () => {
+    await prisma.$disconnect();
+  });
+
