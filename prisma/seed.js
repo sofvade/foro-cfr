@@ -1,36 +1,32 @@
-// prisma/seed.js (CommonJS)
 const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
 
-async function main() {
-  const europea = await prisma.university.upsert({
-    where: { name: "Universidad Europea" },
-    update: {},
-    create: {
-      name: "Universidad Europea",
-      country: "España",
-      city: "Madrid",
-      website: "https://universidadeuropea.com",
-      rankings: { create: [{ year: 2025, position: 120, source: "QS" }, { year: 2024, position: 115, source: "THE" }] }
-    },
-  });
-
-  const complu = await prisma.university.upsert({
-    where: { name: "Universidad Complutense de Madrid" },
-    update: {},
-    create: {
-      name: "Universidad Complutense de Madrid",
-      country: "España",
-      city: "Madrid",
-      website: "https://www.ucm.es",
-      rankings: { create: [{ year: 2025, position: 200, source: "QS" }] }
-    },
-  });
-
-  console.log({ europea: europea.id, complu: complu.id });
+async function ensureUniversity({ name, country, city, website }, rankings = []) {
+  let uni = await prisma.university.findFirst({ where: { name } });
+  if (!uni) {
+    uni = await prisma.university.create({ data: { name, country, city, website } });
+  }
+  for (const r of rankings) {
+    const exists = await prisma.ranking.findFirst({
+      where: { year: r.year, source: r.source, universityId: uni.id },
+    });
+    if (!exists) await prisma.ranking.create({ data: { ...r, universityId: uni.id } });
+  }
+  return uni;
 }
 
-main()
-  .catch((e) => { console.error(e); process.exit(1); })
+async function main() {
+  await ensureUniversity(
+    { name: "Universidad Europea", country: "España", city: "Madrid", website: "https://universidadeuropea.com" },
+    [{ year: 2025, position: 120, source: "QS" }, { year: 2024, position: 115, source: "THE" }]
+  );
+
+  await ensureUniversity(
+    { name: "Universidad Complutense de Madrid", country: "España", city: "Madrid", website: "https://www.ucm.es" },
+    [{ year: 2025, position: 200, source: "QS" }]
+  );
+}
+
+main().catch(e => { console.error(e); process.exit(1); })
   .finally(async () => { await prisma.$disconnect(); });
 

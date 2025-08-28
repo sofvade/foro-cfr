@@ -1,3 +1,4 @@
+generator client {
   provider = "prisma-client-js"
 }
 
@@ -6,6 +7,26 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+// --- EXISTENTES ---
+model Category {
+  id        String   @id @default(cuid())
+  slug      String   @unique
+  name      String
+  posts     Post[]
+  createdAt DateTime @default(now())
+}
+
+model Post {
+  id         String   @id @default(cuid())
+  title      String
+  slug       String   @unique
+  content    String
+  categoryId String
+  category   Category @relation(fields: [categoryId], references: [id])
+  createdAt  DateTime @default(now())
+}
+
+// --- NUEVOS PARA RANKINGS ---
 model University {
   id        Int       @id @default(autoincrement())
   name      String
