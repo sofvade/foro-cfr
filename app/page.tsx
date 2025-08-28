@@ -1,21 +1,28 @@
-import Hero from '@/components/Hero'
-import ArticleCard from '@/components/ArticleCard'
+// Update the import path if the file is located at 'components/Home/FeaturedHero.tsx'
+import FeaturedHero from '../components/home/FeaturedHero';
+import StoryGrid from '../components/home/StoryGrid';
+import QuickNav from '@/components/home/QuickNav';
+import { FEATURED, RIGHT_COLUMN, LATEST } from '@/lib/home';
 
-export default function Home() {
-  const featured = [
-    { title: 'Cómo abrir cuenta bancaria siendo estudiante no UE', kicker: 'In Brief', href: '/analysis/cuenta-bancaria' },
-    { title: 'Residencias vs. pisos compartidos: costo total 2025', kicker: 'Análisis', href: '/analysis/alojamiento-2025' },
-    { title: 'Checklist legal para Erasmus (España)', kicker: 'Temas', href: '/topics/legal/checklist-erasmus' },
-  ]
+export default function HomePage() {
   return (
-    <div>
-      <Hero />
-      <section className="mx-auto max-w-6xl px-4">
-        <h2 className="font-serif text-2xl mb-4">Lo más reciente</h2>
-        <div className="grid md:grid-cols-3 gap-5">
-          {featured.map((a) => <ArticleCard key={a.href} {...a} />)}
-        </div>
-      </section>
-    </div>
-  )
+    <main className="max-w-6xl mx-auto p-6 space-y-10">
+      {/* Héroe estilo CFR */}
+      <FeaturedHero featured={FEATURED} right={RIGHT_COLUMN} />
+
+      {/* Accesos rápidos */}
+      <QuickNav />
+
+      {/* Últimos / destacados */}
+      <StoryGrid
+        title="Últimos contenidos"
+        stories={LATEST}
+        viewAllHref="/topics"
+      />
+    </main>
+  );
 }
+
+
+
+

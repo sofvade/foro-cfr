@@ -7,43 +7,67 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-// --- EXISTENTES ---
 model Category {
   id        String   @id @default(cuid())
+  name      String
   slug      String   @unique
-  name      String
-  posts     Post[]
   createdAt DateTime @default(now())
+  Thread    Thread[]
 }
 
-model Post {
-  id         String   @id @default(cuid())
+model Comment {
+  id        String   @id
+  content   String
+  threadId  String
+  authorId  String
+  createdAt DateTime @default(now())
+  updatedAt DateTime
+  User      User     @relation(fields: [authorId], references: [id])
+  Thread    Thread   @relation(fields: [threadId], references: [id])
+
+  @@index([threadId, createdAt])
+}
+
+model Reaction {
+  id        String   @id
+  userId    String
+  threadId  String
+  createdAt DateTime @default(now())
+  Thread    Thread   @relation(fields: [threadId], references: [id])
+  User      User     @relation(fields: [userId], references: [id])
+
+  @@unique([userId, threadId])
+  @@index([threadId])
+}
+
+model Thread {
+  id         String     @id
   title      String
-  slug       String   @unique
+  slug       String     @unique
   content    String
-  categoryId String
-  category   Category @relation(fields: [categoryId], references: [id])
-  createdAt  DateTime @default(now())
+  authorId   String
+  createdAt  DateTime   @default(now())
+  updatedAt  DateTime
+  categoryId String?
+  Comment    Comment[]
+  Reaction   Reaction[]
+  User       User       @relation(fields: [authorId], references: [id])
+  Category   Category?  @relation(fields: [categoryId], references: [id])
+
+  @@index([categoryId])
+  @@index([createdAt])
 }
 
-// --- NUEVOS PARA RANKINGS ---
-model University {
-  id        Int       @id @default(autoincrement())
-  name      String
-  country   String
-  city      String?
-  website   String?
-  rankings  Ranking[]
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
-}
-
-model Ranking {
-  id           Int        @id @default(autoincrement())
-  year         Int
-  position     Int
-  source       String
-  universityId Int
-  university   University @relation(fields: [universityId], references: [id])
+model User {
+  id           String     @id
+  name         String?
+  email        String     @unique
+  passwordHash String
+  image        String?
+  role         String     @default("user")
   createdAt    DateTime   @default(now())
+  updatedAt    DateTime
+  Comment      Comment[]
+  Reaction     Reaction[]
+  Thread       Thread[]
 }

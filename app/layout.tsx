@@ -1,26 +1,20 @@
-import Link from "next/link";
+import type { Metadata } from 'next';
+import './globals.css';
+import Header from '../components/Header';
 
-<Link href="/periodicos" className="hover:underline">
-  Periódicos
-</Link>
-import './globals.css'
-import Header from '@/components/Header'
-import Footer from '@/components/Footer'
-import { ReactNode } from 'react'
+export const metadata: Metadata = {
+  title: 'Foro Educativo',
+  description: 'Foro con análisis y ranking de universidades en España.',
+};
 
-export const metadata = {
-  title: 'Campus Insight Board',
-  description: 'Foro educativo y hub editorial para estudiantes internacionales.',
-}
-
-export default function RootLayout({ children }: { children: ReactNode }) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="es">
-      <body>
+      <body className="bg-white text-zinc-900">
         <Header />
-        <main>{children}</main>
-        <Footer />
+        {children}
       </body>
     </html>
-  )
+  );
 }
+
